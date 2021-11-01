@@ -22,6 +22,11 @@ async function run() {
         const serviceCollection = database.collection('service');
         const blogPostCollection = database.collection('blogPost');
 
+        app.get('/', (req, res)=>{
+            res.send('Running WorldTrip server');
+        })
+
+
         app.get('/services', async (req, res) => {
             const cursor = serviceCollection.find({});
             const services = await cursor.toArray();
