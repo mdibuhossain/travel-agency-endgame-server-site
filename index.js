@@ -22,17 +22,18 @@ async function run() {
         const serviceCollection = database.collection('service');
         const blogPostCollection = database.collection('blogPost');
 
+        app.get('/services', async (req, res) => {
+            const cursor = serviceCollection.find({});
+            const services = await cursor.toArray();
+            res.send(services);
+        });
+        
         app.get('/blog', async (req, res) => {
             const cursor = blogPostCollection.find({});
             const blog = await cursor.toArray();
             res.send(blog);
         })
 
-        app.get('/services', async (req, res) => {
-            const cursor = serviceCollection.find({});
-            const services = await cursor.toArray();
-            res.send(services);
-        });
 
         // POST API
         app.post('/services', async (req, res) => {
