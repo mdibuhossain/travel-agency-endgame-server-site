@@ -1,7 +1,8 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
-
 const cors = require('cors');
+const ObjectId = require('mongodb').ObjectId;
+
 require('dotenv').config();
 
 const app = express();
@@ -26,18 +27,29 @@ async function run() {
             res.send('Running WorldTrip server');
         })
 
-
+        // Get Services
         app.get('/services', async (req, res) => {
             const cursor = serviceCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
         });
 
+        // Delete Service
+        app.delete('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const res  = await serviceCollection.deleteOne(query);
+            res.json(res);
+        })
+
+        // Get Blogs
         app.get('/blog', async (req, res) => {
             const cursor = blogPostCollection.find({});
             const blog = await cursor.toArray();
             res.send(blog);
         })
+
+
 
 
         // POST API
