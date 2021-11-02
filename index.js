@@ -59,7 +59,7 @@ async function run() {
             console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
-        
+
         // Update service
         app.put('/services/updateservice/:id', async (req, res) => {
             const id = req.params.id;
