@@ -22,7 +22,7 @@ async function run() {
         const serviceCollection = database.collection('service');
         const blogPostCollection = database.collection('blogPost');
 
-        app.get('/', (req, res)=>{
+        app.get('/', (req, res) => {
             res.send('Running WorldTrip server');
         })
 
@@ -32,7 +32,7 @@ async function run() {
             const services = await cursor.toArray();
             res.send(services);
         });
-        
+
         app.get('/blog', async (req, res) => {
             const cursor = blogPostCollection.find({});
             const blog = await cursor.toArray();
