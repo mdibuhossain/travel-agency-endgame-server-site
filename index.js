@@ -19,34 +19,35 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        const database = client.db('WorldTrip');
-        const serviceCollection = database.collection('service');
-        const blogPostCollection = database.collection('blogPost');
-        const orderCollection = database.collection('order');
+        const database = client.db('TravelPagla');
+        const servicesCollection = database.collection('services');
+        const blogsCollection = database.collection('blogs');
+        const ordersCollection = database.collection('orders');
+        const usersCollection = database.collection('users');
 
         app.get('/', (req, res) => {
-            res.send('Running WorldTrip server');
+            res.send('Running Travel Pagla server');
         })
 
         // Get Services
         app.get('/services', async (req, res) => {
-            const cursor = serviceCollection.find({});
+            const cursor = servicesCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
         });
 
         // Get order
-        app.get('/order', async (req, res) => {
-            const cursor = orderCollection.find({});
+        app.get('/orders', async (req, res) => {
+            const cursor = ordersCollection.find({});
             const order = await cursor.toArray();
             res.send(order);
         });
 
         // Delete order
-        app.delete('/order/:id', async (req, res) => {
+        app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const finalRes = await orderCollection.deleteOne(query);
+            const query = { _id: id };
+            const finalRes = await ordersCollection.deleteOne(query);
             console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
@@ -55,7 +56,7 @@ async function run() {
         app.delete('/services/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const finalRes = await serviceCollection.deleteOne(query);
+            const finalRes = await servicesCollection.deleteOne(query);
             console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
@@ -77,32 +78,41 @@ async function run() {
                     img: updateRes.img
                 }
             };
-            const result = await serviceCollection.updateOne(filter, finalUpdate, options);
+            const result = await servicesCollection.updateOne(filter, finalUpdate, options);
             // console.log('updating', id);
             res.json(result);
         })
 
         // Get Blogs
-        app.get('/blog', async (req, res) => {
-            const cursor = blogPostCollection.find({});
+        app.get('/blogs', async (req, res) => {
+            const cursor = blogsCollection.find({});
             const blog = await cursor.toArray();
             res.send(blog);
         })
 
-        // POST API
+        // POST services
         app.post('/services', async (req, res) => {
             const service = req.body;
             // console.log('hit the post api', service);
-            const result = await serviceCollection.insertOne(service);
+            const result = await servicesCollection.insertOne(service);
+            // console.log(result);
+            res.json(result);
+        })
+
+        // POST services
+        app.post('/blogs', async (req, res) => {
+            const blog = req.body;
+            // console.log('hit the post api', service);
+            const result = await blogsCollection.insertOne(blog);
             // console.log(result);
             res.json(result);
         })
 
         // Post order 
-        app.post('/order', async (req, res) => {
+        app.post('/orders', async (req, res) => {
             const order = req.body;
             // console.log('hit the order api', order);
-            const result = await orderCollection.insertOne(order);
+            const result = await ordersCollection.insertOne(order);
             // console.log(result);
             res.json(result);
         })
@@ -113,7 +123,7 @@ async function run() {
 }
 run().catch(console.dir);
 
- 
+
 app.listen(port, () => {
     console.log('listening PORT', port);
 })
