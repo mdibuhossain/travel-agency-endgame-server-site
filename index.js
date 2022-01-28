@@ -67,7 +67,7 @@ async function run() {
             console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
-
+ 
         // Delete blog
         app.delete('/blogs/delete/:id', async (req, res) => {
             const id = req.params.id;
