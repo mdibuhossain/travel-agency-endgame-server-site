@@ -53,7 +53,7 @@ async function run() {
         // Delete order
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: id };
+            const query = { _id: ObjectId(id) };
             const finalRes = await ordersCollection.deleteOne(query);
             console.log('delete successfull', finalRes);
             res.json(finalRes);
@@ -67,7 +67,7 @@ async function run() {
             console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
- 
+
         // Delete blog
         app.delete('/blogs/delete/:id', async (req, res) => {
             const id = req.params.id;
@@ -121,7 +121,7 @@ async function run() {
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
             const finalUpdate = {
-                $set: {role: 'admin'}
+                $set: { role: 'admin' }
             };
             const result = await usersCollection.updateOne(filter, finalUpdate, options);
             console.log(result);
@@ -165,9 +165,10 @@ async function run() {
         // Post order 
         app.post('/orders', async (req, res) => {
             const order = req.body;
-            // console.log('hit the order api', order);
+            delete order['_id']
+            // console.log(order);
             const result = await ordersCollection.insertOne(order);
-            // console.log(result);
+            console.log(result);
             res.json(result);
         })
 
