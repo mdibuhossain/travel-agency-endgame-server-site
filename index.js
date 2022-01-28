@@ -43,6 +43,13 @@ async function run() {
             res.send(order);
         });
 
+        // get users
+        app.get('/users', async (req, res) => {
+            const cursor = usersCollection.find({});
+            const result = await cursor.toArray();
+            res.json(result);
+        })
+
         // Delete order
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
@@ -57,6 +64,15 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const finalRes = await servicesCollection.deleteOne(query);
+            console.log('delete successfull', finalRes);
+            res.json(finalRes);
+        })
+
+        // Delete blog
+        app.delete('/blogs/delete/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const finalRes = await blogsCollection.deleteOne(query);
             console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
@@ -83,6 +99,35 @@ async function run() {
             res.json(result);
         })
 
+        // allow blog
+        app.put('/blogs/allow/:id', async (req, res) => {
+            const id = req.params.id;
+            const status = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const finalUpdate = {
+                $set: {
+                    status: status.status
+                }
+            };
+            const result = await blogsCollection.updateOne(filter, finalUpdate, options);
+            console.log(result);
+            res.json(result);
+        })
+
+        // make admin
+        app.put('/users/makeadmin/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const finalUpdate = {
+                $set: {role: 'admin'}
+            };
+            const result = await usersCollection.updateOne(filter, finalUpdate, options);
+            console.log(result);
+            res.json(result);
+        })
+
         // Get Blogs
         app.get('/blogs', async (req, res) => {
             const cursor = blogsCollection.find({});
@@ -95,6 +140,15 @@ async function run() {
             const service = req.body;
             // console.log('hit the post api', service);
             const result = await servicesCollection.insertOne(service);
+            // console.log(result);
+            res.json(result);
+        })
+
+        // POST blog
+        app.post('/blogs', async (req, res) => {
+            const blog = req.body;
+            // console.log('hit the post api', service);
+            const result = await blogsCollection.insertOne(blog);
             // console.log(result);
             res.json(result);
         })
@@ -115,6 +169,26 @@ async function run() {
             const result = await ordersCollection.insertOne(order);
             // console.log(result);
             res.json(result);
+        })
+
+        // Post user
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            // console.log('hit the order api', order);
+            const result = await usersCollection.insertOne(user);
+            // console.log(result);
+            res.json(result);
+        })
+
+        // check admin
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (result?.role === 'admin')
+                isAdmin = true;
+            res.json({ admin: isAdmin })
         })
     }
     finally {
