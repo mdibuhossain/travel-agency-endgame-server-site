@@ -36,6 +36,14 @@ async function run() {
             res.send(services);
         });
 
+        // Get single blog
+        app.get('/blogs/:id', async (req, res) => {
+            const id = req.params.id;
+            const cursor = blogsCollection.find({ _id: ObjectId(id) });
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+
         // Get order
         app.get('/orders', async (req, res) => {
             const cursor = ordersCollection.find({});
