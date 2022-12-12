@@ -25,7 +25,7 @@ async function run() {
         const usersCollection = database.collection('users');
 
         app.get('/', (req, res) => {
-            res.send('Running Travel Pagla server');
+            res.send('Running Travel Wala server');
         })
 
         // Get Services
@@ -62,7 +62,7 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const finalRes = await ordersCollection.deleteOne(query);
-            console.log('delete successfull', finalRes);
+            // console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
 
@@ -71,7 +71,7 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const finalRes = await servicesCollection.deleteOne(query);
-            console.log('delete successfull', finalRes);
+            // console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
 
@@ -80,7 +80,7 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const finalRes = await blogsCollection.deleteOne(query);
-            console.log('delete successfull', finalRes);
+            // console.log('delete successfull', finalRes);
             res.json(finalRes);
         })
 
@@ -118,7 +118,7 @@ async function run() {
                 }
             };
             const result = await blogsCollection.updateOne(filter, finalUpdate, options);
-            console.log(result);
+            // console.log(result);
             res.json(result);
         })
 
@@ -131,7 +131,7 @@ async function run() {
                 $set: { role: 'admin' }
             };
             const result = await usersCollection.updateOne(filter, finalUpdate, options);
-            console.log(result);
+            // console.log(result);
             res.json(result);
         })
 
@@ -175,7 +175,7 @@ async function run() {
             delete order['_id']
             // console.log(order);
             const result = await ordersCollection.insertOne(order);
-            console.log(result);
+            // console.log(result);
             res.json(result);
         })
 
